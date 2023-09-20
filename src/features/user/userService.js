@@ -103,6 +103,19 @@ const toggleCartItem = async(data) => {
   return response.data;
 };
 
+const createOrder = async(order) => {
+  
+  const response = await axios.post(`${base_url}/orders/create`, order);
+  return response.data;
+};
+
+
+const emptyCart = async(userId) => {
+  
+  const response = await axios.post(`${base_url}/user/empty-cart`, userId);
+  return response.data;
+};
+
 
 
 export const userService = {
@@ -118,5 +131,7 @@ export const userService = {
   favToggle,
   contactPreference,
   getUserOrders,
-  toggleCartItem
+  toggleCartItem,
+  createOrder,
+  emptyCart
 }

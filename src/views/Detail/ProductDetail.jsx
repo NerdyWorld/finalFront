@@ -20,7 +20,7 @@ const ProductDetail = ({ productId, initialSelectedColor }) => {
   const dispatch = useDispatch();
   const userState = useSelector(state => state.user);
   const [showCartButton, setShowCartButton] = useState(false); 
-
+  const [finalImages, setFinalImages] = useState([]);
 
   useEffect(() => {
     if (products.length === 0) {
@@ -47,6 +47,16 @@ const ProductDetail = ({ productId, initialSelectedColor }) => {
         ? product.colors[0]
         : "")
   );
+
+useEffect(() => {
+    if(selectedColor){
+      product.images.map(el => {
+        if(el.color.toLowerCase() === selectedColor.toLowerCase()){
+          setFinalImages(el.images);
+        }
+      })
+    }
+}, [selectedColor]);
   const toggleMenu = () => {
     setMenuDetailOpen(!isMenuDetailOpen);
   };
@@ -80,6 +90,7 @@ const ProductDetail = ({ productId, initialSelectedColor }) => {
    
     setShowCartButton(true);
   };
+
 
   return (
     <div className={`detail-container ${isMenuDetailOpen ? "open" : ""}`}>
@@ -255,7 +266,7 @@ const ProductDetail = ({ productId, initialSelectedColor }) => {
       )}
       {showCartButton && (
         <CartButton 
-          product={{ ...product, selectedSize, selectedColor }} 
+          product={{ ...product, selectedSize, selectedColor, images: finalImages }} 
           close={() => setIsCartOpen(false)}
            />
           )}

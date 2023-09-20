@@ -7,7 +7,7 @@ import { initMercadoPago } from '@mercadopago/sdk-react'
 import { MP_KEY } from "./utils/utilities";
 import Router from "./router";
 import jwt_decode from "jwt-decode";
-import { getUser } from "./features/user/userSlice";
+import { getUser, getUserOrders } from "./features/user/userSlice";
 import { useDispatch } from "react-redux";
 import { getAllProducts, getColors } from "./features/products/productSlice";
 import LoginModal from "./components/Modals/LoginModal";
@@ -73,6 +73,7 @@ function App() {
       // Decode the userId and dispatch a petition to the back to get the user data
       const decodedId = jwt_decode(getUserFromLocalStorage.userId);
       dispatch(getUser(decodedId.id));
+      dispatch(getUserOrders(decodedId.id));
     }else{
       setLogged(false);
     };
@@ -96,7 +97,7 @@ function App() {
     initMercadoPago(MP_KEY);
 
     // # Google Places API Mounting
-    // initMap().then(() => initAutocomplete())
+    initMap().then(() => initAutocomplete())
 
     dispatch(getAllProducts());
     dispatch(getColors());

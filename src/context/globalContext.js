@@ -168,7 +168,6 @@ export const GlobalProvider = ({children}) =>{
     firstName: "",
     lastName: "",
     apartment: "",
-    email: "",
     street: "",
     streetNumber: "",
     zipCode: "",

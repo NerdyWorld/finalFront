@@ -5,9 +5,8 @@ import { GlobalContext } from '../../../../context/globalContext';
 const CheckoutModal = () => {
   // CONTEXT API
   const globalContext = useContext(GlobalContext);
-  const { setShowProductModal, showProductModal } = globalContext;
+  const { setShowProductModal, showProductModal, getPriceByCurrency } = globalContext;
 
-  const overview = "This OnTheGo PM tote bag is crafted from cream Canvas and decorated with a pastel Monogram Giant design. The model features an intricate Monogram flower motif on the trim and top handles inspired by traditional Portuguese ceramic tiles. The elegant piece is completed with a practical, adjustable and removable shoulder strap.";
 
   return ( 
     <article className={`${styles.article} checkoutProductModal`} style={{top: showProductModal ? "0px" : "-1000px", opacity: showProductModal ? 1 : 0}}>
@@ -19,15 +18,16 @@ const CheckoutModal = () => {
         <div className={styles.left}>
         <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
           <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img src="/images/lvtest3.avif" className="d-block w-100" alt="..."/>
-            </div>
-            <div className="carousel-item">
-              <img src="/images/lvtest.avif" className="d-block w-100" alt="..."/>
-            </div>
-            <div className="carousel-item">
-              <img src="/images/lvtest2.png" className="d-block w-100" alt="..."/>
-            </div>
+            {
+              showProductModal && showProductModal.images.map((el, index) => {
+                return(
+                  <div className={`carousel-item ${index === 0 && "active"}`}>
+                    <img src={el} className="d-block w-100" alt="..."/>
+                  </div>
+                )
+              })
+            }
+            
           </div>
           <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -40,21 +40,21 @@ const CheckoutModal = () => {
         </div>
         </div>
         <div className={styles.right}>
-          <h4>LV Pink Summer Bag'33</h4>
+          <h4>{showProductModal?.name}</h4>
           <div className={styles.brand}>
-            <span>Louis Vuitton</span>
+            <span>{showProductModal?.brand}</span>
           </div>
-          <p className={styles.price}>$7.300</p>
+          <p className={styles.price}>{getPriceByCurrency(showProductModal?.price)}</p>
           <div className={styles.overview}>
             <span>Overview</span>
-            <p>{overview.length > 433 ? overview.slice(0, 433) + "…" : overview}</p>
+            <p>{showProductModal?.description?.length > 433 ? showProductModal?.description.slice(0, 433) + "…" : showProductModal.description}</p>
           </div>
           <div className={styles.total}>
             <div className={styles.quantity}>
-              <span>Quantity: 3</span>
+              <span>Quantity: 1</span>
             </div>
             <div className={styles.totalPrice}>
-              <span>$21.900</span>
+              <span>{getPriceByCurrency(showProductModal?.price)}</span>
             </div>
           </div>
         </div>

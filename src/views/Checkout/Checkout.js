@@ -15,14 +15,16 @@ import CheckoutModal from '../../components/Modals/Checkout/Products/Product';
 import { Helmet } from 'react-helmet';
 import CheckoutBreadcrumb from '../../components/Utils/CheckoutBreadcrumb/CheckoutBreadcrumb';
 import ZoomProduct from '../../components/Modals/Checkout/Products/ZoomProduct';
+import { useDispatch, useSelector } from 'react-redux';
+import { emptyCart } from '../../features/user/userSlice';
 
 const stripePromise = loadStripe(STRIPE_P_KEY);
 
-const dummy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const Checkout = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Checkout Grid
   const [showInList, setShowInList] = useState(false);
@@ -31,33 +33,80 @@ const Checkout = () => {
   // CONTEXT API
   const globalContext = useContext(GlobalContext);
   const { 
-    payWithStripe, 
+    payWithStripe,
     showInfo,
     showShipping,
     showPayment,
     setShowProductModal,
-    setShowZoomProduct
+    setShowZoomProduct,
+    getPriceByCurrency,
+    refToastCheckoutAutocomplete
   } = globalContext;
 
+
+
+  const state = useSelector(state => state.user);
+  const { user, cart, message } = state;
+
+  const [userCart, setUserCart] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    if(user){
+      if(typeof cart === "string"){
+        return setUserCart(JSON.parse(cart));
+      };
+      if(cart.length){
+        return setUserCart(cart);
+      };
+      if(!cart){
+        return setUserCart([]);
+      }
+    }
+  }, [cart, user]);
+
+  useEffect(() => {
+    if(userCart.length){
+      let price = 0;
+      userCart.map(el =>{
+        price += el.price;
+      });
+
+      setTotal(price);
+    }
+  }, [userCart]);
 
   // STRIPE IMPLEMENTATION
   const [clientSecret, setClientSecret] = useState(null);
 
   useEffect(() => {
     // STRIPE PAYMENT IMPLEMENTATION
-    (async()=>{
-      const getClientSecret = await axios.post("http://localhost:3001/api/stripe/create-payment-intent", {
-        data: {
-          currency: "usd",
-          amount: 1900
-        }
-      });
-  
-      setClientSecret(getClientSecret.data.clientSecret);
-    })()
-  }, []);
+    if(total > 0){
+      (async()=>{
+        const getClientSecret = await axios.post("http://localhost:3001/api/stripe/create-payment-intent", {
+          data: {
+            currency: "usd",
+            amount: total
+          }
+        });
+    
+        setClientSecret(getClientSecret.data.clientSecret);
+      })()
+    }
+  }, [total]);
   // ------- STRIPE ENDS ----------->
 
+  useEffect(() => {
+    if(message === "Order created"){
+      dispatch(emptyCart(user?.id))
+      refToastCheckoutAutocomplete.current.show({life: 2000, severity: "success", summary: "Thank you!", detail: "We received your order succesfully!"});
+      setTimeout(()=>{
+        navigate("/account/orders");
+      },2100);
+    };
+  }, [message]);
+
+  
 
 
   return ( 
@@ -85,7 +134,7 @@ const Checkout = () => {
             </div> */}
             <div className={styles.totalContainer}>
               <div className={styles.leftTotal}>
-                <span>$50.300</span>
+                <span>{getPriceByCurrency(total)}</span>
                 <div className={styles.leftSubTotal}>
                   <span>In</span>
                   <span>Total</span>
@@ -105,30 +154,30 @@ const Checkout = () => {
 
             {
               showInList ? (
-                dummy.map((el, index) => {
+                userCart.map((el, index) => {
                   return(
-                    <div className={styles.leftEachImgList}>
+                    <div key={index} className={styles.leftEachImgList}>
                       <div className={styles.leftEachImgListSub}>
-                        <div className={styles.leftEachImg} onClick={()=> setShowZoomProduct(true)}>
-                          <img src="/images/lvtest.avif" alt="abc"/>
+                        <div className={styles.leftEachImg} onClick={()=> setShowZoomProduct(el.images)}>
+                          <img src={el.images[0]} alt="abc"/>
                         </div>
                         <div className={styles.leftEachImgListSub2}>
-                          <span>Pinky Bag Horner'33</span>
-                          <span>Louis Vuitton</span>
+                          <span>{el.name}</span>
+                          <span>{el.brand}</span>
                         </div>
                       </div>
                       <div className={styles.leftEachImgListSub3}>
-                        <span>$7330</span>
+                        <span>{getPriceByCurrency(el.price)}</span>
                       </div>
                     </div>
                   )
                 })
               ):(
-                dummy.map(el => {
+                userCart.map(el => {
                   return(
                     <div className={styles.leftEachImg}>
-                      <img src="/images/lvtest.avif" alt="abc"/>
-                      <div onClick={()=> setShowProductModal(true)}>
+                      <img src={el.images[0]} alt="abc"/>
+                      <div onClick={()=> setShowProductModal(el)}>
                         <i className="fa-solid fa-eye fa-xl"></i>
                       </div>
                     </div>
@@ -161,7 +210,7 @@ const Checkout = () => {
           }
           {
             showPayment && !payWithStripe && 
-            <Payment/>
+            <Payment total={total}/>
           }
 
 
@@ -173,7 +222,7 @@ const Checkout = () => {
                 <div>
                   <img src="/images/stripeLogo.svg" alt="abc" width={100}/>
                 </div>
-                <Stripe/>
+                <Stripe total={total}/>
               </div>
             </Elements>
           }

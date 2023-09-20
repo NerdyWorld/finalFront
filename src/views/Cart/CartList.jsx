@@ -47,7 +47,7 @@ const CartItemsList = ({ closeModal }) => {
           </button>
         </div>
         <div className="checkout-cart-list">
-          <button className="checkout-cart">Checkout</button>
+          <button className="checkout-cart" onClick={()=> navigate("/checkout")}>Checkout</button>
           <button className="checkout-cart" onClick={() => navigate('home')}>View more collections</button>
         </div>
         {cartItems.map((item, index) => {
@@ -71,7 +71,7 @@ const CartItemsList = ({ closeModal }) => {
             <div className="cart-item" key={index}>
                  
               <div className="cart-container-title">
-                <img className='image-cart-item' src={imageUrl} alt="Producto" />
+                <img className='image-cart-item' src={item.images[0]} alt="Producto" />
                 <div className="data-cart-price">
                   <span className="name-cart">{item.name}</span>
                   <span className="price-cart">usd {item.price}</span>

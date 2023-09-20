@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from "./OrderCard.module.css";
 import jsPDFInvoiceTemplate, { OutputType, jsPDF } from "jspdf-invoice-template";
@@ -9,6 +9,8 @@ const OrderCard = ({order}) => {
 
   const state = useSelector(state => state.user);
   const { userOrders, user } = state;
+
+  const [orderItems, setOrderItems] = useState([]);
 
   const handleInvoice = (order) =>{
     var props = {
@@ -134,6 +136,16 @@ const OrderCard = ({order}) => {
   const [showDetails, setShowDetails] = useState(false);
 
 
+  useEffect(() => {
+    if(order){
+      if(typeof order.items === "string"){
+        return setOrderItems(JSON.parse(order.items))
+      }else{
+        return setOrderItems(order.items);
+      }
+    }
+  }, [order]);
+
   return ( 
     <div className={styles.eachOrder}>
       <div className={styles.orderTop}>
@@ -147,7 +159,7 @@ const OrderCard = ({order}) => {
       <div className={`${showDetails ? styles.orderMiddle2 : styles.orderMiddle}`}>
         {
           showDetails ? (
-            order.items.map(el => {
+            orderItems.map(el => {
               return(
                 <div className={styles.orderMiddleContainer2}>
                   <div className={styles.orderMiddleImg2}>
@@ -172,7 +184,7 @@ const OrderCard = ({order}) => {
               )
             })
           ):(
-            order.items.map(el => {
+            orderItems.map(el => {
               return(
                 <div className={styles.orderMiddleContainer}>
                   <div className={styles.orderMiddleImg}>

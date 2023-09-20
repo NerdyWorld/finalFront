@@ -125,6 +125,26 @@ export const toggleCartItem = createAsyncThunk("toggleCartItem", async(data, thu
 });
 
 
+export const createOrder = createAsyncThunk("createOrder", async(data, thunkAPI) => {
+  try {
+    const response = await userService.createOrder(data);
+    return response;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
+
+export const emptyCart = createAsyncThunk("emptyCart", async(data, thunkAPI) => {
+  try {
+    const response = await userService.emptyCart(data);
+    return response;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
+
 export const clearUserMessage = createAction("create-user-message");
 
 
@@ -335,6 +355,25 @@ export const userSlice = createSlice({
           })
 
 
+          // CREATE ORDER
+          .addCase(createOrder.pending, (state, action) =>{
+            state.isLoading = true;
+          })
+          .addCase(createOrder.fulfilled, (state, action)=>{
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.isError = false;
+            state.message = action.payload.msg;
+            state.userOrders = [...state.userOrders, action.payload.data];
+          })
+          .addCase(createOrder.rejected, (state, action) =>{
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.isError = true;
+            state.message = action.payload.msg;
+          })
+
+
           // SEND ACTIVATION CODE
           .addCase(sendActivationCode.pending, (state, action) =>{
             state.isLoading = true;
@@ -372,6 +411,7 @@ export const userSlice = createSlice({
           })
 
           
+          // CART TOGGLE
           .addCase(toggleCartItem.pending, (state) => {
             state.isLoading = true;
           })
@@ -383,6 +423,22 @@ export const userSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.error.message;
+          })
+
+
+          // EMPTY CART
+          .addCase(emptyCart.pending, (state) => {
+            state.isLoading = true;
+          })
+          .addCase(emptyCart.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.user = {...state.user, cart: []};
+            state.cart = [];
+          })
+          .addCase(emptyCart.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.error.msg;
           })
  
           // ACTIONS

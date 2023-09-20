@@ -3,17 +3,55 @@ import { Wallet } from "@mercadopago/sdk-react";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import styles from "./PaymentSection.module.css"
 import { GlobalContext } from '../../../context/globalContext';
+import { createOrder, emptyCart } from '../../../features/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import uniqId from 'uniqid';
+import { useNavigate } from 'react-router-dom';
 
 
-
-const Payment = () => {
+const Payment = ({total}) => {
 
 
   // CONTEXT API
   const globalContext = useContext(GlobalContext);
-  const { refZipCode, billingInfo, setBillingInfo, setShowZipCodeModal, setSameAsShipping, sameAsShipping, setPayWithStripe, setShowPayment, setShowShipping, refTop } = globalContext;
+  const { refZipCode, billingInfo, setBillingInfo, setShowZipCodeModal, setSameAsShipping, sameAsShipping, setPayWithStripe, setShowPayment, setShowShipping, refTop, shippingInfo, shippingMethod } = globalContext;
+  
+  
+  const [mpItems, setMpItems] = useState([]);
+  const dispatch = useDispatch();
+  const state = useSelector(state => state.user);
+  const { user, message } = state;
+  const navigate = useNavigate();
+
+  const [userCart, setUserCart] = useState([]);
+
+  useEffect(() => {
+    if(user){
+      if(typeof user.cart === "string"){
+        return setUserCart(JSON.parse(user.cart));
+      };
+      if(!user.cart){
+        return setUserCart([])
+      };
+      if(user.cart){
+        return setUserCart(user.cart);
+      };
+    }
+  }, [user]);
 
 
+  useEffect(() => {
+    if(userCart){
+      userCart.map(el => {
+        mpItems.push({
+          title: el.name,
+          unit_price: el.price,
+          quantity: 1,
+          currency: "USD"
+        })
+      });
+    }
+  }, [userCart]);
 
 
   // ------------ MERCADO PAGO ----->
@@ -29,12 +67,7 @@ const Payment = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({items: [{
-          title: "BLS",
-          unit_price: 333,
-          quantity: 28,
-          currency_id: "USD"
-        }]}),
+        body: JSON.stringify({items: mpItems}),
       })
         .then((response) => {
           console.log(response);
@@ -56,12 +89,7 @@ const Payment = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({items: [{
-          title: "BLS",
-          unit_price: 333,
-          quantity: 28,
-          currency_id: "USD"
-        }]}),
+        body: JSON.stringify({items: mpItems}),
       })
         .then((response) => {
           return response.json();
@@ -130,6 +158,7 @@ const Payment = () => {
   useEffect(() => {
     refTop.current?.scrollIntoView();
   }, []);
+
   
   return ( 
     <div className={styles.wrapper}>
@@ -224,7 +253,7 @@ const Payment = () => {
                     purchase_units: [
                         {
                             amount: {
-                                value: 333
+                                value: total
                             },
                         },
                     ],
@@ -233,11 +262,21 @@ const Payment = () => {
               onApprove={(data, actions) => {
                 // Once the payment is approved
                 // Redirect to Home for example
+                dispatch(createOrder({
+                  belongsTo: user?.id,
+                  orderId: uniqId(),
+                  orderStatus: "Ordered",
+                  totalPrice: total,
+                  shippingAddress: `${shippingInfo.firstName} ${shippingInfo.lastName}. ${shippingInfo.street} ${shippingInfo.streetNumber} ${shippingInfo.apartment}. ${shippingInfo.country}, ${shippingInfo.city}. ${shippingInfo.state}, ${shippingInfo.zipCode}`,
+                  billingAddress: sameAsShipping ? `${shippingInfo.firstName} ${shippingInfo.lastName}. ${shippingInfo.street} ${shippingInfo.streetNumber} ${shippingInfo.apartment}. ${shippingInfo.country}, ${shippingInfo.city}. ${shippingInfo.state}, ${shippingInfo.zipCode}` : `${billingInfo.firstName} ${billingInfo.lastName}. ${billingInfo.street} ${billingInfo.streetNumber} ${billingInfo.apartment}. ${billingInfo.country}, ${billingInfo.city}. ${billingInfo.state}, ${billingInfo.zipCode}`,
+                  shippingMethod: shippingMethod,
+                  items: userCart
+                }));
                 
               }}
 
               onError={(data, actions)=>{
-                
+                navigate("/error");
               }}
 
               onCancel={(data, actions)=> {

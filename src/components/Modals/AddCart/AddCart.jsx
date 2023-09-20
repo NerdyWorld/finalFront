@@ -48,7 +48,7 @@ const CartButton = ({ product }) => {
        
       <div className="button-add-cart">
         <div className="button-cart-container-title">
-          <img src={imageUrl} alt="Producto" />
+          <img src={product.images[0]} alt="Producto" />
           <div className="data-cart-price">
             <span className="name-cart">{product.name}</span>
             <span className="price-cart">usd {product.price}</span>

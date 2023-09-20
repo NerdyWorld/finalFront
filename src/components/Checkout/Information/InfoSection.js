@@ -196,11 +196,12 @@ const Information = () => {
   }
 
   useEffect(() => {
-    if(autocomplete && showInfo){
+    if(autocomplete){
       // Google Places API Mounting
       initMap().then(() => initAutocomplete());
-    };
+    }
   }, [autocomplete, showInfo]);
+
 
 
 
