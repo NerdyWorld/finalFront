@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsCartPlus } from "react-icons/bs";
+import { GlobalContext } from "../../../context/globalContext";
 
 const CardCarousel = ({ products = [] }) => {
   const [selectedColors, setSelectedColors] = useState({});
   const navigate = useNavigate();
+  const globalContext = useContext(GlobalContext);
+  const { getPriceByCurrency } = globalContext;
 
   function handleColorChange(productId, selectedColor) {
     setSelectedColors((prev) => ({ ...prev, [productId]: selectedColor }));
@@ -26,15 +29,16 @@ const CardCarousel = ({ products = [] }) => {
                 {activeImages.map((image, imageIndex) => (
                   <div
                     key={imageIndex}
-                    className={`card-collection-carousel-item carousel-item ${imageIndex === 0 ? "active" : ""}`}
+                    className={`card-collection-carousel-item carousel-item ${imageIndex === 0 ? "active" : ""} ${product.brand === "Dolce & Gabbana" && "dolceCard"}`}
                   >
                     <div className="background-card">
-                      <img
-                        src={image}
-                        onClick={() => navigate(`/products/${product.id}/${activeColor}`)}
-                        className="d-block w-100"
-                        alt={`${product.name}-${activeColor}`}                       
-                      />
+                      {
+                        image.includes("mp4") ? (
+                          <video src={image.trim()} muted controls loop className='d-block w-100' onClick={()=> window.location.assign(`http://localhost:3000/products/${product.id}/${product.colors[0]}`)}></video>
+                        ):(
+                          image.replaceAll(" ", "").slice(0, 2) === "hh" ? <img src={"h" + image.slice(2, image.length).replaceAll(" ", "")} class="d-block w-100" alt="..."  onClick={()=> window.location.assign(`http://localhost:3000/products/${product.id}/${product.colors[0]}`)}/> : <img src={image.replaceAll(" ", "")} class="d-block w-100" alt="..."  onClick={()=> window.location.assign(`http://localhost:3000/products/${product.id}/${product.colors[0]}`)}/>
+                        )
+                      }
                     </div>
                   </div>
                 ))}
@@ -53,8 +57,8 @@ const CardCarousel = ({ products = [] }) => {
                     ></button>
                   ))}                   
                   </div>
-                  <h4 className='price-card-collection'>usd {product.price}</h4>
-                    <BsCartPlus style={{width:"30px", color:"white", marginRight:"20px"}}/>
+                  <h4 className='price-card-collection'>{getPriceByCurrency(product.price)}</h4>
+                    {/* <BsCartPlus style={{width:"30px", color:"white", marginRight:"20px"}}/> */}
                 </div>       
 
               <button

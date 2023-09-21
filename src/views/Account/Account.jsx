@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from "./Account.module.css";
 import AccountHeader from '../../components/AccountHeader/AccountHeader';
 import { useInView } from 'react-intersection-observer';
@@ -8,7 +8,11 @@ import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { contactPreference } from '../../features/user/userSlice';
 import { TailSpin } from 'react-loader-spinner';
-
+import { Translate } from 'react-auto-translate';
+import { Toast } from 'primereact/toast';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import "primereact/resources/primereact.min.css";                  //core css
+import "primeicons/primeicons.css";
 
 
 const Account = () => {
@@ -18,9 +22,10 @@ const Account = () => {
   const state = useSelector(state => state.user);
   const { user, message, userOrders } = state;
 
+  const refToast = useRef();
   const handleLogout = () =>{
     setLogged(false);
-    navigate("/home");
+    window.location.assign("http://localhost:3000/home")
   };
 
   // CONTEXT API
@@ -87,32 +92,33 @@ const Account = () => {
   return ( 
     <div className={styles.wrapper}>
       <AccountHeader refHeader={refHeader}/>
+      <Toast ref={refToast} position='top-left'></Toast>
       <div className={`${styles.sections} ${fixSections && styles.fixed}`}>
         <div className={styles.logo}>
           <span>My</span>
           <h5>MIH</h5>
         </div>
-        <div className={styles.section} style={{borderLeft:"1px solid #eae8e4", borderBottom:"2.5px solid #1f1f1f"}}>
-          <span>Overview</span>
+        <div className={styles.section} style={{borderLeft:"1px solid #eae8e4"}} onClick={()=> navigate("/account")}>
+          <span><Translate>Overview</Translate></span>
         </div>
         <div className={styles.section} onClick={()=> navigate("/account/profile")}>
-          <span>My Profile</span>
+          <span><Translate>My Profile</Translate></span>
         </div>
         <div className={styles.section} onClick={()=> navigate("/account/orders")}>
-          <span>My Orders</span>
+          <span><Translate>My Orders</Translate></span>
         </div>
-        <div className={styles.section} onClick={()=> navigate("/account/wishlist")}>
-          <span>My Wishlist</span>
+        <div className={styles.section} style={{borderBottom:"2.5px solid #1f1f1f"}} onClick={()=> navigate("/account/wishlist")} >
+          <span><Translate>My Wishlist</Translate></span>
         </div>
-        <div className={styles.section}>
-          <span>My Reviews</span>
+        <div className={styles.section} onClick={()=> refToast.current.show({life: 3000, severity: "info", summary: `Hi ${user?.userName}!`, detail: `Our robots are working in this functionality!`})}>
+          <span><Translate>My Reviews</Translate></span>
         </div>
       </div>
       
       {/* SCROLL TO THE TOP BUTTON */}
       <div className={`${styles.scrollTop} ${showScrollBtn && styles.show}`}>
         <button className={scrollTopLight ? styles.light : ""} onClick={()=> window.scrollTo(0, 0)}>
-          Back to the start
+        <Translate>Back to the start</Translate>
           <i className='bx bx-chevron-up'></i>
         </button>
       </div>
@@ -159,7 +165,7 @@ const Account = () => {
                         }
                       </div>
                     </div>
-                    <span>Email newsletter</span>
+                    <span><Translate>Email newsletter</Translate></span>
                   </div>
                   <div className={styles.eachContact} onClick={()=> dispatch(contactPreference({userId: user?.id, contactPreference: "Phone"}))}>
                     <div className={styles.contactIcon}>
@@ -187,7 +193,7 @@ const Account = () => {
                         }
                       </div>
                     </div>
-                    <span>Phone</span>
+                    <span><Translate>Phone</Translate></span>
                   </div>
                   <div className={styles.eachContact} onClick={()=> dispatch(contactPreference({userId: user?.id, contactPreference: "Chat"}))}>
                     <div className={styles.contactIcon}>
@@ -215,7 +221,7 @@ const Account = () => {
                         }
                       </div>
                     </div>
-                    <span>Text Chat App</span>
+                    <span><Translate>Chat</Translate></span>
                   </div>
                   <div className={styles.eachContact} onClick={()=> dispatch(contactPreference({userId: user?.id, contactPreference: "Mail"}))}>
                     <div className={styles.contactIcon}>
@@ -243,16 +249,16 @@ const Account = () => {
                         }
                       </div>
                     </div>
-                    <span>Mail</span>
+                    <span><Translate>Mail</Translate></span>
                   </div>
                 </div>
               </div>
               <div className={styles.blackButton}>
-                <button onClick={()=> navigate("/account/profile")}>Edit Profile</button>
+                <button onClick={()=> navigate("/account/profile")}><Translate>Edit Profile</Translate></button>
               </div>
             </div>
             <div className={styles.eachCard}>
-              <h5>My Orders</h5>
+              <h5><Translate>My Orders</Translate></h5>
               <div className={styles.orders}>
                 {
                   userOrders.length ? (
@@ -260,10 +266,10 @@ const Account = () => {
                       <thead>
                         <tr>
                           <th>Id</th>
-                          <th>Status</th>
-                          <th>Date</th>
-                          <th>Items</th>
-                          <th>Total</th>
+                          <th><Translate>Status</Translate></th>
+                          <th><Translate>Date</Translate></th>
+                          <th><Translate>Items</Translate></th>
+                          <th><Translate>Total</Translate></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -283,19 +289,19 @@ const Account = () => {
                       </tbody>
                     </table>
                   ):(
-                    <span>There are no current orders</span>
+                    <span><Translate>There are no current orders</Translate></span>
                   )
                 }
               </div>
               <div className={styles.blackButton}>
-                <button>View Orders</button>               
+                <button onClick={()=> navigate("/account/orders")}><Translate>View Orders</Translate></button>               
                 {/* <button>Start Shopping</button> */}
               </div>
             </div>
           </div>
           <div className={styles.cardsBottom}>
             <div className={styles.eachCard}>
-                <h5>My Wishlist</h5>
+                <h5><Translate>My Wishlist</Translate></h5>
                 <div className={`${styles.wishlist} ${userFavorites.length > 0 && styles.active}`}>
                     {
                       userFavorites.length ? (
@@ -313,12 +319,12 @@ const Account = () => {
                           )
                         })
                       ):(
-                        <span>There are no current items</span>
+                        <span><Translate>There are no current items</Translate></span>
                       )
                     }
                 </div>
                 <div className={styles.blackButton}>
-                  <button onClick={()=> navigate("/account/wishlist")}>Edit Wishlist</button>
+                  <button onClick={()=> navigate("/account/wishlist")}><Translate>Edit Wishlist</Translate></button>
                 </div>
               </div>
               <div className={styles.eachCard}>
@@ -327,7 +333,7 @@ const Account = () => {
           </div>
           <div className={styles.signOff}>
              <button onClick={handleLogout}>
-                Logout
+             <Translate>Logout</Translate>
                 <i className='bx bx-log-out'></i>
              </button>
           </div>

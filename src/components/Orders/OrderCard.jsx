@@ -153,7 +153,7 @@ const OrderCard = ({order}) => {
         <span className={styles.orderDate}>{new Date(order.createdAt).toLocaleDateString()}</span>
         <span className={styles.orderPurchase}><span className={styles.purchased}>{order.orderStatus}</span>  &nbsp;Website - Client Services</span>
         <div className={styles.orderGrow}></div>
-        <span className={styles.orderLength}>{order.items.length} Items</span>
+        <span className={styles.orderLength}>{orderItems.length} Items</span>
         <span className={styles.orderTotal}>${order.totalPrice}</span>
       </div>
       <div className={`${showDetails ? styles.orderMiddle2 : styles.orderMiddle}`}>

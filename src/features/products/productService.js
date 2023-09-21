@@ -23,7 +23,7 @@ const getColors = async() =>{
 };
 
 const searchProducts = async(string) =>{
-  const response = await axios.get(`${base_url}/products/search`, {string});
+  const response = await axios.post(`${base_url}/products/search`, {string});
 
   return response.data;
 };

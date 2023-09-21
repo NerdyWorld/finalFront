@@ -127,28 +127,28 @@ const Profile = () => {
           <h5>MIH</h5>
         </div>
         <div className={styles.section} style={{borderLeft:"1px solid #eae8e4"}} onClick={()=> navigate("/account")}>
-          <span>Overview</span>
+          <span><Translate>Overview</Translate></span>
         </div>
-        <div className={styles.section} style={{borderBottom:"2.5px solid #1f1f1f"}}>
-          <span>My Profile</span>
+        <div className={styles.section} onClick={()=> navigate("/account/profile")}>
+          <span><Translate>My Profile</Translate></span>
         </div>
         <div className={styles.section} onClick={()=> navigate("/account/orders")}>
-          <span>My Orders</span>
+          <span><Translate>My Orders</Translate></span>
         </div>
-        <div className={styles.section} onClick={()=> navigate("/account/wishlist")}>
-          <span>My Wishlist</span>
+        <div className={styles.section} style={{borderBottom:"2.5px solid #1f1f1f"}} onClick={()=> navigate("/account/wishlist")} >
+          <span><Translate>My Wishlist</Translate></span>
         </div>
-        <div className={styles.section} onClick={()=> navigate("/account/reviews")}>
-          <span>My Reviews</span>
+        <div className={styles.section} onClick={()=> refToast.current.show({life: 3000, severity: "info", summary: `Hi ${user?.userName}!`, detail: `Our robots are working in this functionality!`})}>
+          <span><Translate>My Reviews</Translate></span>
         </div>
       </div>
 
       {/* CONTENT */}
       <div className={styles.content} style={{marginTop: fixSections ? "87.5px" : "0px"}}>
-        <h2 className={styles.title}>My Profile</h2>
+        <h2 className={styles.title}><Translate>My Profile</Translate></h2>
         <div className={styles.container}>
           <div className={styles.left}>
-            <h2 className={styles.subTitle}>Personal Information</h2>
+            <h2 className={styles.subTitle}><Translate>Personal Information</Translate></h2>
             <div className={styles.leftContainer}>
               <form onSubmit={saveInformation}>
                 {/* <div className={styles.requiredFields}>
@@ -218,7 +218,7 @@ const Profile = () => {
                           visible={true}
                         />
                       ):(
-                        "Save Information"
+                        <Translate>Save Information</Translate>
                       )
                     }
                   </button>
@@ -227,7 +227,7 @@ const Profile = () => {
             </div>
           </div>
           <div className={styles.right}>
-            <h2 className={styles.subTitle}>Login Information</h2>
+            <h2 className={styles.subTitle}><Translate>Login Information</Translate></h2>
             <div className={styles.rightContainer}>
               <div className={styles.loginInput}>
                 <span><Translate>Email</Translate></span>
@@ -237,8 +237,8 @@ const Profile = () => {
                 </div>
               </div>
               <div className={styles.password}>
-                <span className='d-flex align-items-center gap-1'>Password <i className='bx bxs-lock-alt'></i></span>
-                <button onClick={handleOpenPassword}>Change</button>
+                <span className='d-flex align-items-center gap-1'><Translate>Password</Translate> <i className='bx bxs-lock-alt'></i></span>
+                <button onClick={handleOpenPassword}><Translate>Change</Translate></button>
               </div>
             </div>
           </div>

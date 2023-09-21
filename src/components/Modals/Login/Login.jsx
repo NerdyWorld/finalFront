@@ -12,6 +12,7 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css"; 
 import { useNavigate } from 'react-router-dom';
+import { TailSpin } from 'react-loader-spinner';
 
 
 const credentialsInitialState = {
@@ -26,6 +27,7 @@ const LoginModalN = () => {
   const navigate = useNavigate();
   const state = useSelector(state => state);
   const { message: userMessage, user } = state.user;
+  const [showPassword, setShowPassword] = useState(false);
 
   // CONTEXT API
   const globalContext = useContext(GlobalContext);
@@ -232,7 +234,7 @@ const LoginModalN = () => {
   }, [userMessage, user]);
 
   return ( 
-    <article className={`${styles.article} loginModalUtil`} style={{right: showLoginModal ? "0" : "-1500px"}}>
+    <article className={`${styles.article} loginModalUtil`} style={{right: showLoginModal ? "0" : "-200vw"}}>
       <Toast ref={refToast} position='top-left'></Toast>
       <div className={styles.div}>
         <div className={styles.container}>
@@ -257,12 +259,36 @@ const LoginModalN = () => {
                 </div>
                 <div className={`${styles.loginInput} mt-3`}>
                   <span><Translate>Password</Translate></span>
-                  <input type="password" name='password' onChange={handleCredentials} value={credentials.password} />
+                  <div className='position-relative'>
+                    <input type={`${showPassword ? "text" : "password"}`} name='password' onChange={handleCredentials} value={credentials.password} />
+                    <div className={styles.seePassword}>
+                      {
+                        showPassword ? <i className="fa-solid fa-eye" onClick={()=> setShowPassword(false)}></i> : <i className="fa-solid fa-eye-slash" onClick={()=> setShowPassword(true)}></i>
+                      }
+                    </div>
+                  </div>
                 </div>
 
-                <span className={styles.forgotPassword}><Translate>Forgot your password?</Translate></span>
+                <span className={styles.forgotPassword} onClick={()=> navigate("/forgot-password")}><Translate>Forgot your password?</Translate></span>
 
-                <button type='submit' className={styles.loginButton}><Translate>Log in</Translate></button>
+                <button type='submit' className={styles.loginButton}>
+                  {
+                    userMessage === "Logging in user" ? (
+                      <TailSpin
+                        height="15"
+                        width="15"
+                        color="white"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                    ):(
+                      <Translate>Log in</Translate>
+                    )
+                  }
+                </button>
               </form>
 
               {/* Or */}

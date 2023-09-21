@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from "./Wishlist.module.css";
 import AccountHeader from '../../../components/AccountHeader/AccountHeader';
 import { useNavigate } from 'react-router';
@@ -9,11 +9,15 @@ import { Dropdown } from 'primereact/dropdown';
 import { GlobalContext } from '../../../context/globalContext';
 import { useSelector } from 'react-redux';
 import Footer from '../../../components/Footer/Footer';
-
+import { Toast } from 'primereact/toast';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import "primereact/resources/primereact.min.css";                  //core css
+import "primeicons/primeicons.css";
 
 
 const Wishlist = () => {
 
+  const refToast = useRef();
   const userState = useSelector(state => state.user);
   const { user } = userState;
   const [userFavorites, setUserFavorites] = useState([]);
@@ -92,6 +96,7 @@ const Wishlist = () => {
   return ( 
     <div className={`${styles.wrapper} createAccount`}>
       <AccountHeader refHeader={refHeader}/>
+      <Toast ref={refToast} position='top-left'></Toast>
       {/* SECTIONS */}
       <div className={`${styles.sections} ${fixSections && styles.fixed}`}>
         <div className={styles.logo}>
@@ -99,19 +104,19 @@ const Wishlist = () => {
           <h5>MIH</h5>
         </div>
         <div className={styles.section} style={{borderLeft:"1px solid #eae8e4"}} onClick={()=> navigate("/account")}>
-          <span>Overview</span>
+          <span><Translate>Overview</Translate></span>
         </div>
         <div className={styles.section} onClick={()=> navigate("/account/profile")}>
-          <span>My Profile</span>
+          <span><Translate>My Profile</Translate></span>
         </div>
         <div className={styles.section} onClick={()=> navigate("/account/orders")}>
-          <span>My Orders</span>
+          <span><Translate>My Orders</Translate></span>
         </div>
         <div className={styles.section} style={{borderBottom:"2.5px solid #1f1f1f"}} onClick={()=> navigate("/account/wishlist")} >
-          <span>My Wishlist</span>
+          <span><Translate>My Wishlist</Translate></span>
         </div>
-        <div className={styles.section} onClick={()=> navigate("/account/reviews")}>
-          <span>My Reviews</span>
+        <div className={styles.section} onClick={()=> refToast.current.show({life: 3000, severity: "info", summary: `Hi ${user?.userName}!`, detail: `Our robots are working in this functionality!`})}>
+          <span><Translate>My Reviews</Translate></span>
         </div>
       </div>
 
@@ -124,7 +129,7 @@ const Wishlist = () => {
                 <h2>{userFavorites.length} Items</h2>
               </div>
               <div className={styles.filters}>
-                <Translate><span className={styles.filterBy}>Filter by</span></Translate>
+                <span className={styles.filterBy}><Translate>Filter by</Translate></span>
                 <div className={`${styles.loginInputGenre} ${styles.loginInput}`}>
                   <div className='position-relative'>
                   <Dropdown value={{name: filterBy, code: filterBy}} onChange={(e) => setFilterBy(e.value.name)} optionLabel='name' options={filterSource} className='w-100' />

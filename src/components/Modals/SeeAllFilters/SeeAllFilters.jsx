@@ -64,7 +64,7 @@ const SeeAllFilters = ({ourStore, query}) => {
       return refToast.current.show({life: 4000, severity: "warn", summary: "We're sorry!", detail: `You must complete at least one field`});
     }else{
       dispatch(filterProducts({
-        brand: collection === "louisVuitton" ? "Louis Vuitton" : collection === "gucci" ? "Gucci" : collection === "fendi" ? "Fendi" : collection === "dolce&Gabbana" ? "Dolce & Gabbana" : collection === "jimmyChoo" ? "Jimmy Choo" : "",
+        brand: collection === "louisvuitton" ? "Louis Vuitton" : collection === "gucci" ? "Gucci" : collection === "fendi" ? "Fendi" : collection === "dolcegabbana" ? "Dolce & Gabbana" : collection === "jimmychoo" ? "Jimmy Choo" : "",
         category: category === "Please select a category" ? "" : category,
         color: colorSelected,
         priceMin: price.priceMin || "",

@@ -121,6 +121,10 @@
   font-family: LVRegular;
   font-size: 14px;
   letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
 }
 
 .loginButton:hover{
@@ -291,4 +295,16 @@
 
 .createAccount:hover::after{
   transform: scaleY(1);
+}
+.seePassword{
+  position: absolute;
+  top: 50%;
+  right: 3%;
+  transform: translateY(-50%);
+  transition: opacity 0.4s ease;
+}
+
+.seePassword i{
+  color: #1f1f1f;
+  font-size: 12px;
 }

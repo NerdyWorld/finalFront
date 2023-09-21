@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from "./Orders.module.css";
 import AccountHeader from '../../../components/AccountHeader/AccountHeader';
 import Footer from '../../../components/Footer/Footer';
@@ -7,10 +7,15 @@ import { useInView } from 'react-intersection-observer';
 import { useSelector } from 'react-redux';
 import jsPDFInvoiceTemplate, { OutputType, jsPDF } from "jspdf-invoice-template";
 import OrderCard from '../../../components/Orders/OrderCard';
-
+import { Translate } from 'react-auto-translate';
+import { Toast } from 'primereact/toast';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import "primereact/resources/primereact.min.css";                  //core css
+import "primeicons/primeicons.css";
 
 const Orders = () => {
 
+  const refToast = useRef();
   // FIX SECTION
   const [fixSections, setFixSections] = useState(false);
 
@@ -186,6 +191,7 @@ const Orders = () => {
   return ( 
     <div className={styles.wrapper}>
       <AccountHeader refHeader={refHeader}/>
+      <Toast ref={refToast} position='top-left'></Toast>
       {/* SECTIONS */}
       <div className={`${styles.sections} ${fixSections && styles.fixed}`}>
         <div className={styles.logo}>
@@ -193,24 +199,24 @@ const Orders = () => {
           <h5>MIH</h5>
         </div>
         <div className={styles.section} style={{borderLeft:"1px solid #eae8e4"}} onClick={()=> navigate("/account")}>
-          <span>Overview</span>
+          <span><Translate>Overview</Translate></span>
         </div>
         <div className={styles.section} onClick={()=> navigate("/account/profile")}>
-          <span>My Profile</span>
+          <span><Translate>My Profile</Translate></span>
         </div>
-        <div className={styles.section} onClick={()=> navigate("/account/orders")} style={{borderBottom:"2.5px solid #1f1f1f"}}>
-          <span>My Orders</span>
+        <div className={styles.section} onClick={()=> navigate("/account/orders")} style={{borderBottom:"2.5px solid #1f1f1f"}} >
+          <span><Translate>My Orders</Translate></span>
         </div>
-        <div className={styles.section} onClick={()=> navigate("/account/wishlist")}>
-          <span>My Wishlist</span>
+        <div className={styles.section} onClick={()=> navigate("/account/wishlist")} >
+          <span><Translate>My Wishlist</Translate></span>
         </div>
-        <div className={styles.section}>
-          <span>My Reviews</span>
+        <div className={styles.section} onClick={()=> refToast.current.show({life: 3000, severity: "info", summary: `Hi ${user?.userName}!`, detail: `Our robots are working in this functionality!`})}>
+          <span><Translate>My Reviews</Translate></span>
         </div>
       </div>
       <div className={styles.content} style={{marginTop: fixSections ? "87.5px" : "0px"}}>
-        <h2 className={styles.title}>My Orders</h2>
-        <h2 className={styles.subTitle}>Current Orders</h2>
+        <h2 className={styles.title}><Translate>My Orders</Translate></h2>
+        <h2 className={styles.subTitle}><Translate>Current Orders</Translate></h2>
         <div className={styles.container}>
           {
             currentOrders.length ? (
@@ -228,7 +234,7 @@ const Orders = () => {
             )
           }
         </div>
-        <h2 className={styles.subTitle}>Purchase History</h2>
+        <h2 className={styles.subTitle}><Translate>Purchase History</Translate></h2>
         <div className={styles.container}>
             {
               purchaseHistory.length ? (

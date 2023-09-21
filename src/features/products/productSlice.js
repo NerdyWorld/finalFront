@@ -134,6 +134,7 @@ export const productSlice = createSlice({
             // SEARCH PRODUCTS
             .addCase(searchProducts.pending, (state)=>{
               state.isLoading = true;
+              state.message = "Searching products";
             })
             .addCase(searchProducts.fulfilled, (state, action)=>{
               state.isLoading = false;

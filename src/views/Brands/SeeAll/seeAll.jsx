@@ -169,7 +169,7 @@ const SeeAll = () => {
             </div>
               <h2>
               {
-                collection === "louisVuitton" && "LOUIS VUITTON STORE"
+                collection === "louisvuitton" && "LOUIS VUITTON STORE"
               }
               {
                 collection === "gucci" && "GUCCI STORE"
@@ -178,10 +178,10 @@ const SeeAll = () => {
                 collection === "fendi" && "FENDI STORE"
               }
               {
-                collection === "dolce&Gabbana" && "DOLCE & GABBANA STORE"
+                collection === "dolcegabbana" && "DOLCE & GABBANA STORE"
               }
               {
-                collection === "jimmyChoo" && "JIMMY CHOO STORE"
+                collection === "jimmychoo" && "JIMMY CHOO STORE"
               }
               </h2>
           </div>

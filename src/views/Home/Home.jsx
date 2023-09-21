@@ -105,8 +105,8 @@ const Home = () => {
         />
         <LandingDGabanna
           buttonText="Explore the Dolce & Gabanna collection"
-          brandName="Dolce & Gabanna"
-          onButtonClick={() => navigate("/collection/dolcegabbana")}
+          brandName="Dolce & Gabbana"
+          onButtonClick={() => navigate("/collection/dolce&gabbana")}
         />
         <LandingFendi
           buttonText="Explore the Fendi collection"

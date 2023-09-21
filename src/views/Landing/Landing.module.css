@@ -1,0 +1,67 @@
+
+.location{
+  margin-top: 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 2rem;
+  transition: all 1s ease;
+  transition-timing-function: 1s ease-in;
+}
+
+.location span{
+  margin-left: 0;
+  margin-top: 0rem;
+  font-size: 13px;
+  transition: none;
+  color: white;
+  font-family: Gucci;
+  padding: 1rem;
+  font-size: 20px;
+  background-color: #000000b1;
+  transition-timing-function: none;
+}
+
+
+.location select{
+  margin-top: 1rem;
+  border: none;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  -moz-appearance:none; /* Firefox */
+  -webkit-appearance:none; /* Safari and Chrome */
+  appearance:none;
+}
+
+
+
+.dropDown{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  width: 30%;
+}
+
+.button{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.button button{
+  border: none;
+  width: 350px;
+  font-family: Gucci;
+  font-size: 11px;
+  padding: 0.5rem 1rem;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.button button:hover{
+  filter: brightness(160%);
+}

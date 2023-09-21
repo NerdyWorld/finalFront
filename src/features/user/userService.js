@@ -6,7 +6,7 @@ import { base_url } from "../../utils/utilities";
 
 const loginUser = async(user) =>{
   const response = await axios.post(`${base_url}/user/login`, user);
-
+  console.log(response);
   return response.data;
 };
 
@@ -117,6 +117,13 @@ const emptyCart = async(userId) => {
 };
 
 
+const forgotPassword = async(email) => {
+  
+  const response = await axios.post(`${base_url}/user/forgot-password`, {email});
+  return response.data;
+};
+
+
 
 export const userService = {
   loginUser,
@@ -133,5 +140,6 @@ export const userService = {
   getUserOrders,
   toggleCartItem,
   createOrder,
-  emptyCart
+  emptyCart,
+  forgotPassword
 }

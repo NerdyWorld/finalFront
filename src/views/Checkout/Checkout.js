@@ -16,7 +16,7 @@ import { Helmet } from 'react-helmet';
 import CheckoutBreadcrumb from '../../components/Utils/CheckoutBreadcrumb/CheckoutBreadcrumb';
 import ZoomProduct from '../../components/Modals/Checkout/Products/ZoomProduct';
 import { useDispatch, useSelector } from 'react-redux';
-import { emptyCart } from '../../features/user/userSlice';
+import { clearUserMessage, emptyCart } from '../../features/user/userSlice';
 
 const stripePromise = loadStripe(STRIPE_P_KEY);
 
@@ -50,6 +50,7 @@ const Checkout = () => {
 
   const [userCart, setUserCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     if(user){
@@ -59,9 +60,6 @@ const Checkout = () => {
       if(cart.length){
         return setUserCart(cart);
       };
-      if(!cart){
-        return setUserCart([]);
-      }
     }
   }, [cart, user]);
 
@@ -83,7 +81,7 @@ const Checkout = () => {
     // STRIPE PAYMENT IMPLEMENTATION
     if(total > 0){
       (async()=>{
-        const getClientSecret = await axios.post("http://localhost:3001/api/stripe/create-payment-intent", {
+        const getClientSecret = await axios.post("https://rivelle-back.up.railway.app/api/stripe/create-payment-intent", {
           data: {
             currency: "usd",
             amount: total
@@ -98,9 +96,11 @@ const Checkout = () => {
 
   useEffect(() => {
     if(message === "Order created"){
+      
       dispatch(emptyCart(user?.id))
       refToastCheckoutAutocomplete.current.show({life: 2000, severity: "success", summary: "Thank you!", detail: "We received your order succesfully!"});
       setTimeout(()=>{
+        dispatch(clearUserMessage());
         navigate("/account/orders");
       },2100);
     };
@@ -210,7 +210,7 @@ const Checkout = () => {
           }
           {
             showPayment && !payWithStripe && 
-            <Payment total={total}/>
+            <Payment total={total} userCart={userCart}/>
           }
 
 

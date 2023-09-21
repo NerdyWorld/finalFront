@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import ProductDetail from './ProductDetail';
-import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllProducts } from '../../features/products/productSlice';
+import React, { useEffect } from "react";
+import ProductDetail from "./ProductDetail";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../../features/products/productSlice";
 
 const Detail = () => {
   const dispatch = useDispatch();
@@ -15,14 +15,19 @@ const Detail = () => {
     }
   }, [dispatch, products]);
 
-
   const productToDisplay = products.find((product) => product.id === id);
 
   return (
     <div>
-       {productToDisplay ? <ProductDetail productId={id} initialSelectedColor={colors}/> : <div>Loading...</div>}
+      {productToDisplay ? (
+        <ProductDetail productId={id} initialSelectedColor={colors} />
+      ) : (
+        <div className="loading-detail-cart">
+          <img className='loading-gif' src="/images/loaddet.svg" alt="loading"/>
+          Loading...</div>
+      )}
     </div>
   );
-}
+};
 
 export default Detail;

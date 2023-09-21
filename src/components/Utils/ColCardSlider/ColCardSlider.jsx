@@ -27,9 +27,9 @@ const ColCardSlider = ({el, index, color, ourStore}) => {
               <div class={`carousel-item ${index === 0 && "active"} ${el.brand === "Dolce & Gabbana" && "dolce"} ${el.brand === "Louis Vuitton" && "lv"} ${ourStore && "ourStore"}`}>
                 {
                   image.includes("mp4") ? (
-                    <video src={image.trim()} muted controls loop className='d-block w-100'></video>
+                    <video src={image.trim()} muted controls loop className='d-block w-100' onClick={()=> window.location.assign(`http://localhost:3000/products/${el.id}/${el.colors[0]}`)}></video>
                   ):(
-                    <img src={image.trim()} class="d-block w-100" alt="..." />
+                    image.slice(0, 2) === "hh" ? <img src={"h" + image.slice(2, image.length).trim()} class="d-block w-100" alt="..."  onClick={()=> window.location.assign(`http://localhost:3000/products/${el.id}/${el.colors[0]}`)}/> : <img src={image.trim()} class="d-block w-100" alt="..."  onClick={()=> window.location.assign(`http://localhost:3000/products/${el.id}/${el.colors[0]}`)}/>
                   )
                 }
               </div>

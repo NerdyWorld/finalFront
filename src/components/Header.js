@@ -2,8 +2,14 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GlobalContext } from "../context/globalContext";
 import LoginModalN from "./Modals/Login/Login.jsx";
+import { useSelector } from "react-redux";
+import { Toast } from 'primereact/toast';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import "primereact/resources/primereact.min.css";                  //core css
+import "primeicons/primeicons.css"; 
 
 const Header = () => {
+  const refToast = useRef();
   const globalContext = useContext(GlobalContext);
   const {setShowLoginModal } = globalContext;
   const navigate = useNavigate();
@@ -14,6 +20,35 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const menuRef = useRef(null);
   const closeRef = useRef(null);
+  const state = useSelector(state => state.user);
+  const { user, cart } = state;
+
+
+  const handleAccount = () =>{
+    if(user && user?.id){
+      navigate("/account")
+    }else{
+      return refToast.current.show({life: 3000, severity: "info", summary: 'Hi there!', detail: "Please login to view your account"});
+    }
+  };
+
+  const handleLogin = () =>{
+    if(user){
+      return refToast.current.show({life: 3000, severity: "info", summary: `Hi ${user?.userName}`, detail: "You are already logged in"});
+    }else{
+      setShowLoginModal(true);
+    }
+  };
+
+  const handleCheckout = () =>{
+    if(!user){
+      return refToast.current.show({life: 3000, severity: "info", summary: "We're sorry", detail: "Please login to view your cart"});
+    }else if(!user.cart || !user.cart.length || !cart || !cart.length){
+      return refToast.current.show({life: 3000, severity: "info", summary: "We're sorry", detail: "You don't have any items in your cart"});
+    }else{
+      navigate("/checkout");
+    }
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen((prevMenu) => {
@@ -72,6 +107,9 @@ const Header = () => {
   return (
     <header className="App-header">
       <LoginModalN/>
+      <div style={{zIndex: "1204"}} className="position-relative">
+        <Toast ref={refToast} position='top-left'></Toast>
+      </div>
       <div className={isMenuOpen ? "overlay open" : "overlay"}></div>     
       <div ref={closeRef} onClick={toggleMenu} className="menu-toggle">
         {isMenuOpen ? "Close" : "Menu"}
@@ -82,7 +120,7 @@ const Header = () => {
         {showLogin && (
           <>
             <div className="containerLogin">
-              <h4 className="menuLogin" onClick={() => setShowLoginModal(true)}>
+              <h4 className="menuLogin" onClick={handleLogin}>
                 Login
               </h4>
             </div>
@@ -90,26 +128,18 @@ const Header = () => {
         )}
         <div className="textMenu">
           <p className="nameToggleSub" onClick={toggleSubMenuOpen}>
-            Woman
+            Women's Collections
           </p>
           <div className={`submenu ${subMenuOpen ? "open" : ""}`}>
             <p onClick={() => navigate("/collection/louisvuitton")}>Louis Vuitton</p>
             <p onClick={() => navigate("/collection/gucci")}>Gucci</p>
             <p onClick={() => navigate("/collection/jimmychoo")}>Jimmy Choo</p>
-            <p onClick={() => navigate("/collection/dolcegabbana")}>Dolce & Gabanna</p>
+            <p onClick={() => navigate("/collection/dolce&gabbana")}>Dolce & Gabanna</p>
             <p onClick={() => navigate("/collection/fendi")}>Fendi</p>
           </div>
-          <p className="nameToggleSub" onClick={toggleSubMenuMenOpen}>
-            Men
-          </p>
-          <div className={`submenu ${subMenuMenOpen ? "open" : ""}`}>
-            <p>Louis Vuitton</p>
-            <p>Gucci</p>
-            <p>Jimmy Choo</p>
-            <p>Dolce & Gabanna</p>
-            <p>Fendi</p>
-          </div>
-          <p onClick={() => navigate("/")}>Back</p>
+          
+          <p className="back-header" onClick={() => navigate("/ourStore")}>Our Store</p>
+          <p className="back-header" onClick={() => navigate("/")}>Back</p>
         </div>
       </div>        
       <div className="header d-flex w-100"> 
@@ -118,10 +148,10 @@ const Header = () => {
             <p className="me-5" onClick={() => handleNavigation("home")}>
               Home
             </p>
-            <p className="me-5" onClick={() => handleNavigation("about")}>
-              About
+            <p className="me-5" onClick={handleAccount}>
+              Account
             </p>
-            <p onClick={() => handleNavigation("Checkout")}>Checkout</p>    
+            <p onClick={handleCheckout}>Checkout</p>    
           </div>
         </div>
       </div>

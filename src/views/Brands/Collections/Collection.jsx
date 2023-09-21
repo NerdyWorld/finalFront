@@ -20,7 +20,7 @@ const Collection = () => {
 
 
   const filteredProducts = products.filter(product => 
-    product.brand.toLowerCase().replace(/\s+/g, '').replace(/&/g, '') === name.toLowerCase().replace(/\s+/g, '')
+    product.brand.toLowerCase().replace(" ", '') === name.toLowerCase().replace(" ", '')
 );
   
   const productsByCategory = filteredProducts.reduce((acc, product) => {
@@ -45,7 +45,7 @@ console.log('productos filtrados',productsByCategory)
 
 return (
     <div className="collection-container">
-        <p className='seeAll-collection' onClick={() => navigate(`/seeAll/${name}`)}>See All</p>
+        <p className='seeAll-collection' onClick={() => navigate(`/seeAll/${name}`)}>View All</p>
         <h2 className="collection-brandName">{brand.brandName}</h2>
         <h3 className="collection-name">{brand.name}</h3>             
         <CarouselCollection productsByCategory={limitedProductsByCategory} collections={brand.collections} />

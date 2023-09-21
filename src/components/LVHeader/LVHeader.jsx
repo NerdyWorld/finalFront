@@ -55,9 +55,9 @@ const LVHeader = ({refHeader}) => {
       <div className={styles.header}>
         <div className={styles.left}>
           {/* <i className='bx bx-menu'></i> */}
-          <div className={styles.world} style={{opacity: showCollectionModal ? 0 : 1}} onClick={()=> setShowLanguageModal(!showLanguageModal)}>
+          {/* <div className={styles.world} style={{opacity: showCollectionModal ? 0 : 1}} onClick={()=> setShowLanguageModal(!showLanguageModal)}>
             <i className='bx bx-world'></i>
-          </div>
+          </div> */}
 
           <div className={styles.currency} style={{opacity: showLanguageModal ? 0 : 1}}>
             <div className={styles.currentCurrency} onClick={()=> setShowCurrencyDropdown(!showCurrencyDropdown)}>
@@ -70,11 +70,11 @@ const LVHeader = ({refHeader}) => {
             </div>
             <div className={styles.currencyDropdown} style={{opacity: showCurrencyDropdown ? "1" : "0", visibility: showCurrencyDropdown ? "visible" : "hidden"}}>
               <ul>
-                <li>USD</li>
-                <li>EUR</li>
-                <li>CAD</li>
-                <li>AUD</li>
-                <li>ARS</li>
+                <li onClick={()=> setCurrency("USD")}>USD</li>
+                <li onClick={()=> setCurrency("EUR")}>EUR</li>
+                <li onClick={()=> setCurrency("CAD")}>CAD</li>
+                <li onClick={()=> setCurrency("AUD")}>AUD</li>
+                <li onClick={()=> setCurrency("ARS")}>ARS</li>
               </ul>
             </div>
           </div>          
@@ -87,7 +87,7 @@ const LVHeader = ({refHeader}) => {
         <div className={styles.right}>
           <span onClick={handleOpenStore}>OUR STORE</span>
           <span onClick={handleShowLogin}>ACCOUNT</span>
-          <span onClick={handleOpenBag}>BAG</span>
+          {/* <span onClick={handleOpenBag}>BAG</span> */}
         </div>
       </div>
     </div>

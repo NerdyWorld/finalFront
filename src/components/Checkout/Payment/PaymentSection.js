@@ -9,39 +9,40 @@ import uniqId from 'uniqid';
 import { useNavigate } from 'react-router-dom';
 
 
-const Payment = ({total}) => {
+const Payment = ({total, userCart}) => {
 
 
   // CONTEXT API
   const globalContext = useContext(GlobalContext);
-  const { refZipCode, billingInfo, setBillingInfo, setShowZipCodeModal, setSameAsShipping, sameAsShipping, setPayWithStripe, setShowPayment, setShowShipping, refTop, shippingInfo, shippingMethod } = globalContext;
+  const { refZipCode, refToastCheckoutAutocomplete, billingInfo, setBillingInfo, setShowZipCodeModal, setSameAsShipping, sameAsShipping, setPayWithStripe, setShowPayment, setShowShipping, refTop, shippingInfo, shippingMethod } = globalContext;
   
   
   const [mpItems, setMpItems] = useState([]);
   const dispatch = useDispatch();
   const state = useSelector(state => state.user);
-  const { user, message } = state;
+  const { user, message, cart } = state;
   const navigate = useNavigate();
 
-  const [userCart, setUserCart] = useState([]);
+  const alertMp = () =>{
+    refToastCheckoutAutocomplete.current.show({life: 3000, severity: "info", summary: "Coming soon!", detail: "Our robots are working on this, soon it will be available"});
+  };
+
+  // const [userCart, setUserCart] = useState([]);
+
+  // useEffect(() => {
+  //   if(cart && user && total){
+  //     if(typeof cart === "string"){
+  //       return setUserCart(JSON.parse(cart));
+  //     };
+  //     if(cart.length){
+  //       return setUserCart(cart);
+  //     };
+  //   }
+  // }, [user, total, cart]);
+
 
   useEffect(() => {
-    if(user){
-      if(typeof user.cart === "string"){
-        return setUserCart(JSON.parse(user.cart));
-      };
-      if(!user.cart){
-        return setUserCart([])
-      };
-      if(user.cart){
-        return setUserCart(user.cart);
-      };
-    }
-  }, [user]);
-
-
-  useEffect(() => {
-    if(userCart){
+    if(userCart.length){
       userCart.map(el => {
         mpItems.push({
           title: el.name,
@@ -50,6 +51,7 @@ const Payment = ({total}) => {
           currency: "USD"
         })
       });
+      console.log(userCart);
     }
   }, [userCart]);
 
@@ -262,6 +264,7 @@ const Payment = ({total}) => {
               onApprove={(data, actions) => {
                 // Once the payment is approved
                 // Redirect to Home for example
+                console.log(userCart);
                 dispatch(createOrder({
                   belongsTo: user?.id,
                   orderId: uniqId(),
@@ -297,7 +300,7 @@ const Payment = ({total}) => {
             {/* MP GET PREFERENCE BUTTON */}
             {
               !preferenceId &&
-                <button onClick={getPreferenceId} className={styles.mpButton} disabled={blockButtons ? true : false}>
+                <button onClick={alertMp} className={styles.mpButton} disabled={blockButtons ? true : false}>
                   <img src="/images/mercadoPagoLogo.png" alt="abc"/>
                 </button>
             }

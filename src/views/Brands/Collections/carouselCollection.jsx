@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Category from "./category";
 import CardCarousel from "./cardCarousel";
 import { categoryMapping } from "./brandsData";
@@ -9,10 +9,12 @@ const CarouselCollection = ({ collections, productsByCategory }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+
   return (
     <div className="collections-container-all">
-      {collections.map((collection) => (
-        <div key={collection.title}>
+      {collections.map((collection) => {
+        console.log(collection.title)
+        return <div key={collection.title}>
           <Category {...collection} />
           {productsByCategory[categoryMapping[collection.title]] && (
             <CardCarousel
@@ -27,7 +29,7 @@ const CarouselCollection = ({ collections, productsByCategory }) => {
             />
           </div>
         </div>
-      ))}
+        })}
     </div>
   );
 };

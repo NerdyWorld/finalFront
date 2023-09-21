@@ -165,7 +165,7 @@ louisvuitton: {
 ]
 },
 
-dolcegabbana: {
+"dolce&gabbana": {
     brandName:"DOLCE & GABBANA",
     name: "Fall-Winter 2023 collection",
     

@@ -144,6 +144,15 @@ export const emptyCart = createAsyncThunk("emptyCart", async(data, thunkAPI) => 
   }
 });
 
+export const forgotPassword = createAsyncThunk("forgotPassword", async(data, thunkAPI) => {
+  try {
+    const response = await userService.forgotPassword(data);
+    return response;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
 
 export const clearUserMessage = createAction("create-user-message");
 
@@ -439,6 +448,23 @@ export const userSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.error.msg;
+          })
+
+
+          // FORGOT PASSWORD
+          .addCase(forgotPassword.pending, (state) => {
+            state.isLoading = true;
+            state.message = "Sending forgot password";
+          })
+          .addCase(forgotPassword.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.message = action.payload.msg;            
+          })
+          .addCase(forgotPassword.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload.msg;
           })
  
           // ACTIONS

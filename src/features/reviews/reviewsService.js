@@ -3,7 +3,7 @@ import { base_url } from "../../utils/utilities";
 
 
 const getAllReviews = async() =>{
-  const response = await axios.get(`${base_url}/reviews`);
+  const response = await axios.get(`${base_url}/reviews/get-all-products`);
 
   return response.data;
 };

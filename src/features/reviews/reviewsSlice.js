@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { reviewsService } from "./reviewsService";
 
 const initialState = {
@@ -26,6 +26,8 @@ export const createReview = createAsyncThunk("createReview", async(review, thunk
     return thunkAPI.rejectWithValue(error);
   }
 });
+
+export const clearReviewMsg = createAction("clearReviewMsg");
 
 
 
@@ -64,13 +66,17 @@ export const reviewsSlice = createSlice({
             state.isError = false;
             state.isSuccess = true;
             state.message = "Review created";
-            state.reviews = [...state.reviews, action.payload];
+            state.reviews = [...state.reviews.data, action.payload.data];
           })
           .addCase(createReview.rejected, (state)=>{
             state.isLoading = false;
             state.isError = true;
             state.isSuccess = false;
             state.message = "Error creating the review";
+          })
+
+          .addCase(clearReviewMsg, (state)=>{
+            state.message = ""
           })
   }
 })

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from "./WishlistCard.module.css";
 import { GlobalContext } from '../../../context/globalContext';
 import {
@@ -13,11 +13,14 @@ import {
 } from "react-share";
 import { useDispatch } from 'react-redux';
 import { favToggle } from '../../../features/user/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { Translate } from 'react-auto-translate';
 
 
 const WishlistCard = ({el, index, userId}) => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // CONTEXT API
   const globalContext = useContext(GlobalContext);
@@ -26,6 +29,11 @@ const WishlistCard = ({el, index, userId}) => {
   const [flipped, setFlipped] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
+  useEffect(() => {
+    if(el){
+      console.log(el.id, el.colors[0]);
+    }
+  }, [el]);
 
   return ( 
     <div className={styles.wishlistItem} key={index}>
@@ -60,13 +68,13 @@ const WishlistCard = ({el, index, userId}) => {
         
         
         <div className={styles.buttons}>
-          <div className={styles.placeCart}>
+          {/* <div className={styles.placeCart}>
             <button>Place in Cart</button>
-          </div>
+          </div> */}
           <div className={styles.wrapButtons}>
             <button className={`${styles.share} ${showTooltip && styles.showTooltip}`} onClick={()=> setShowTooltip(true)}>
               <i className='bx bxs-share-alt' ></i>
-              Share
+              <Translate>Share</Translate>
               <div className={styles.tooltip}>
                 <PinterestShareButton url={`https://rivelle.netlify.app/detail/${el.id}`}>
                   <PinterestIcon size={25} borderRadius={50}/>
@@ -85,9 +93,9 @@ const WishlistCard = ({el, index, userId}) => {
                 </div>
               </div>
             </button>
-            <button className={styles.details}>
+            <button className={styles.details} onClick={(e)=> {e.stopPropagation() ; navigate(`/products/${el.id}/${el.colors[0]}`)}}>
               <i className='bx bx-plus'></i>
-              All details
+              <Translate>All details</Translate>
             </button>
           </div>
         </div>
