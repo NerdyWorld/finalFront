@@ -35,6 +35,8 @@ body {
 .header-links {
   display: flex;
   background: transparent;
+  
+
 }
 .header-links p {
   color: #ffffff;
@@ -43,14 +45,27 @@ body {
   font-weight: 900;
   transition: all 0.4s ease;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
   transition: border-bottom-color 0.3s ease;
+  position: relative;
+  letter-spacing: 1.3px;
+  border-bottom: 2px solid transparent;
+}
+.header-links p::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: translateX(-50%) scaleX(0);
+  height: 1px;
+  left: 50%;
+  bottom: -4px;
+  background-color: white;
+  transform-origin: bottom right;
+  transition: transform 0.4s ease-out;
+}
+.header-links p:hover::after {
+  transform: translateX(-50%) scale(1);
 }
 
-.header-links p:hover {
-  color: #dfdfdf;
-  border-bottom-color: #dfdfdf;
-}
 .header {
   position: relative;
   background: #0e0e0e;
@@ -443,10 +458,12 @@ transform: translateX(-50%) scale(1);
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
-  padding: 10px 20px;
-  font-weight: 500;
-  font-family: "futuraStd";
-  letter-spacing: 1.8px;
+  padding: 13px 25px;
+  font-weight: 600;
+  font-family: "Louis Vuitton Web";
+  text-transform: uppercase;
+  font-size: 16px;
+  letter-spacing: 2px;
   border-radius: 10px;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.87);
@@ -505,14 +522,25 @@ transform: translateX(-50%) scale(1);
   display: flex;
   justify-content: center;
   letter-spacing: 2.5px;
-  padding: 10px;
+  padding: 20px;
+  background-color: rgb(8, 8, 8);
   font-size: 35px;
   cursor: default;
   font-family: "futuraStd";
-  color: rgba(156, 156, 156, 0.329);
-  background: rgba(7, 7, 7, 0.966);
+  color: rgba(168, 168, 168, 0.836);
+  box-shadow: 0 2px 4px rgba(0,0,0,.4), 0 7px 13px -3px rgba(0,0,0,.3), inset 0 -3px 0 rgba(0,0,0,.2);
 }
 
+.scrollpage-home{
+  color: white;
+  font-size: 30px;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+.scrollpage-home:hover{
+  scale: 1.03;
+}
 /* CAROUSEL LV */
 
 .landingClassForCarousel .carousel-indicators {
@@ -1229,6 +1257,8 @@ input.form-control:focus {
 .seeAll-collection:hover::after {
   transform: translateX(50%) scale(1);
 }
+
+
 
 /* BUTTON SCROLL TO TOP */
 .scroll-to-top-btn {

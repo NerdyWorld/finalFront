@@ -6,6 +6,8 @@ import LandingGucci from "./CarouselGucci";
 import LandingDGabanna from "./CarouselDGab";
 import LandingFendi from "./CarouselFendi";
 import { useNavigate } from "react-router-dom";
+import { BsChevronDoubleDown } from "react-icons/bs";
+import { BsChevronDoubleUp } from "react-icons/bs"
 
 const Home = () => {
   const navigate = useNavigate();
@@ -13,6 +15,14 @@ const Home = () => {
   const [showLogin, setShowLogin] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const contentLandingRef = useRef(null);
+  const [currentCarousel, setCurrentCarousel] = useState(0);
+  const [showButton, setShowButton] = useState(false);
+  const [isScrollingDown, setIsScrollingDown] = useState(true);
+  const vuittonRef = useRef(null);
+  const gucciRef = useRef(null);
+  const chooRef = useRef(null);
+  const dGabannaRef = useRef(null);
+  const fendiRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,8 +59,10 @@ const Home = () => {
       }
       if (scrolled > 50) {
         setShowLogin(false);
+        setShowButton(true);
       } else {
         setShowLogin(true);
+        setShowButton(false);
       }
     };
     window.addEventListener("scroll", handleScroll);
@@ -61,6 +73,25 @@ const Home = () => {
     };
   }, []);
 
+
+  const handleNextClick = () => {
+    const carousels = [vuittonRef, gucciRef, chooRef, dGabannaRef, fendiRef];
+
+    if (currentCarousel < carousels.length - 1) {
+      carousels[currentCarousel + 1].current.scrollIntoView({ behavior: 'smooth' });
+      setCurrentCarousel(prevCarousel => prevCarousel + 1);
+
+      if (currentCarousel === carousels.length - 2) {       
+        setIsScrollingDown(false);
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setCurrentCarousel(0);
+      setIsScrollingDown(true);
+    }
+};
+
+
   return (
     <div className="landing">
       <div className="navbar">
@@ -68,6 +99,11 @@ const Home = () => {
           <h1 ref={titleLanding} className="LandingWelc">
             Rivélle
           </h1>
+          {showButton && (
+    <div onClick={handleNextClick} className='scrollpage-home'>
+       {isScrollingDown ? <BsChevronDoubleDown /> : <BsChevronDoubleUp />}
+    </div>
+)}
           {showLogin && (
             <div className="movingContainer">
               <div className="movingText">
@@ -88,31 +124,41 @@ const Home = () => {
         </div>
       </div>
       <div className="contentLanding" ref={contentLandingRef}>
+      <div ref={vuittonRef}>
         <LandingVuitton
           buttonText="Explore the Louis Vuitton collection"
           brandName="Louis Vuitton"
           onButtonClick={() => navigate("/collection/louisvuitton")}
         />
+        </div>
+        <div ref={gucciRef}>
         <LandingGucci
           buttonText="Explore the Gucci collection"
           brandName="Gucci"
           onButtonClick={() => navigate("/collection/gucci")}
         />
+        </div>
+        <div ref={chooRef}>
         <LandingJChoo
           buttonText="Explore the Jimmy Choo collection"
           brandName="Jimmy Choo"
           onButtonClick={() => navigate("/collection/jimmychoo")}
         />
+        </div>
+        <div ref={dGabannaRef}>
         <LandingDGabanna
           buttonText="Explore the Dolce & Gabanna collection"
           brandName="Dolce & Gabbana"
           onButtonClick={() => navigate("/collection/dolce&gabbana")}
         />
+        </div>
+        <div ref={fendiRef}>
         <LandingFendi
           buttonText="Explore the Fendi collection"
           brandName="Fendi"
           onButtonClick={() => navigate("/collection/fendi")}
         />
+        </div>
       </div>
     </div>
   );
